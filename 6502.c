@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include "memory.h"
 
 //registers
 uint8_t A = 0;
@@ -14,24 +15,6 @@ uint8_t SP = 0x1;
 //status register
 uint8_t SR = 0x20;
 
-//2KB of  internal memory
-uint8_t internal_RAM[0x800] = {0};
-
-//cartridge space in memory
-uint8_t cart_mem[0xBFE0] = {0};
-
-//read from memory
-uint8_t read_mem(uint16_t addr);
-//addressing modes
-uint16_t imm();
-uint16_t absolute();
-uint16_t abs_x();
-uint16_t abs_y();
-uint16_t ind_x();
-uint16_t ind_y();
-uint16_t zero_pg();
-uint16_t zero_pg_x();
-uint16_t zero_pg_y();
 
 void SR_flags(uint16_t val, char flags[]);
 
@@ -80,89 +63,6 @@ void cpu_cycle(uint8_t op);
 
 int main(){
     return 0;
-}
-
-/*--------------------------------------------------------
-Addressing functions
---------------------------------------------------------*/
-//read from memory
-uint8_t read_mem(uint16_t addr){
-    if(addr <= 0x800){
-        return internal_RAM[addr];
-    }else if(addr >= 0x4020){
-        return cart_mem[addr - 0x4020];
-    }
-}
-
-//write to memory
-void write_mem(uint16_t addr, uint8_t data){
-    if(addr <= 0x800){
-        internal_RAM[addr] = data;
-    }else if(addr >= 0x4020){
-        cart_mem[addr - 0x4020] = data;
-    }
-}
-
-//immediate addressing
-uint16_t imm(){
-    return PC + 1;
-}
-
-//absolute addressing
-uint16_t absolute(){
-    uint8_t low = read_mem(PC + 1);
-    uint8_t high = read_mem(PC + 2);
-    high <<= 8;
-    return high + low;
-}
-
-//absolute x-indexed addressing
-uint16_t abs_x(){
-    uint8_t low = read_mem(PC + 1);
-    uint8_t high = read_mem(PC + 2);
-    high <<= 8;
-    return high + low + X;
-}
-
-//absolute y-indexed addressing
-uint16_t abs_y(){
-    uint8_t low = read_mem(PC + 1);
-    uint8_t high = read_mem(PC + 2);
-    high <<= 8;
-    return high + low + Y;
-}
-
-//indirect x-indexed addressing
-uint16_t ind_x(){
-    uint8_t imm0 = read_mem(PC + 1);
-    uint8_t low = read_mem(imm0 + X);
-    uint8_t high = read_mem(imm0 + X + 1);
-    high <<= 8;
-    return high + low;
-}
-
-//indirect y-indexed addressing
-uint16_t ind_y(){
-    uint8_t imm0 = read_mem(PC + 1);
-    uint8_t low = read_mem(imm0);
-    uint8_t high = read_mem(imm0 + 1);
-    high <<= 8;
-    return high + low + Y;
-}
-
-//zero page addressing
-uint16_t zero_pg(){
-    return (uint16_t) read_mem(PC + 1);
-}
-
-//zero page x-indexed addressing
-uint16_t zero_pg_x(){
-    return (uint16_t) read_mem(PC + 1) + X;
-}
-
-//zero page y-indexed addressing
-uint16_t zero_pg_y(){
-    return (uint16_t) read_mem(PC + 1) + Y;
 }
 
 /*--------------------------------------------------------
@@ -524,15 +424,15 @@ void cpu_cycle(uint8_t op){
             PC += 7;
         break;
         case 0x01:
-            ORA(ind_x());
+            ORA(ind_x(PC, X));
             PC += 6;
         break;
         case 0x05:
-            ORA(zero_pg());
+            ORA(zero_pg(PC));
             PC += 3;
         break;
         case 0x06:
-            shift(zero_pg(), 'L');
+            shift(zero_pg(PC), 'L');
             PC += 5;
         break;
         case 0x08:
@@ -541,7 +441,7 @@ void cpu_cycle(uint8_t op){
             PC += 3;
         break;
         case 0x09:
-            ORA(imm());
+            ORA(imm(PC));
             PC += 2;
         break;
         case 0x0A:
@@ -549,11 +449,11 @@ void cpu_cycle(uint8_t op){
             PC += 2;
         break;
         case 0x0D:
-            ORA(absolute());
+            ORA(absolute(PC));
             PC += 4;
         break;
         case 0x0E:
-            shift(absolute(), 'L');
+            shift(absolute(PC), 'L');
             PC += 6;
         break;
         case 0x10:
@@ -562,16 +462,16 @@ void cpu_cycle(uint8_t op){
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x11:
-            ORA(ind_y());
+            ORA(ind_y(PC, Y));
             PC += 5;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x15:
-            ORA(zero_pg_x());
+            ORA(zero_pg_x(PC, X));
             PC += 4;
         break;
         case 0x16:
-            shift(zero_pg_x(), 'L');
+            shift(zero_pg_x(PC, X), 'L');
             PC += 6;
         break;
         case 0x18:
@@ -579,17 +479,17 @@ void cpu_cycle(uint8_t op){
             PC += 2;
         break;
         case 0x19:
-            ORA(abs_y());
+            ORA(abs_y(PC, Y));
             PC += 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1D:
-            ORA(abs_x());
+            ORA(abs_x(PC, X));
             PC += 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1E:
-            shift(abs_x(), 'L');
+            shift(abs_x(PC, X), 'L');
             PC += 7;
         break;
 		case 0x20:
@@ -597,24 +497,28 @@ void cpu_cycle(uint8_t op){
             PC += 6;
         break;
 		case 0x21:
-            AND(ind_x());
+            AND(ind_x(PC, X));
             PC += 6;
         break;
 		case 0x24:
-            BIT(zero_pg());
+            BIT(zero_pg(PC));
             PC += 3;
         break;
 		case 0x25:
-            AND(zero_pg());
+            AND(zero_pg(PC));
             PC += 3;
         break;
 		case 0x26:
-            rotate(zero_pg(), 'L');
+            rotate(zero_pg(PC), 'L');
             PC += 5;
         break;
 		case 0x28:
             pull(&SR);
             PC += 4;
+        break;
+		case 0x29:
+            AND(imm(PC));
+            PC += 2;
         break;
     }
 }
