@@ -520,6 +520,11 @@ void cpu_cycle(uint8_t op){
             AND(imm(PC));
             PC += 2;
         break;
+        //TODO figure out accumlator pointer
+        case 0x2A:
+            //rotate(&A, 'L');
+            PC += 2;
+        break;
     }
 }
 
