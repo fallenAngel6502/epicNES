@@ -10,9 +10,6 @@ uint8_t internal_RAM[0x800] = {0};
 //cartridge space in memory
 uint8_t cart_mem[0xBFE0] = {0};
 
-/*--------------------------------------------------------
-Addressing functions
---------------------------------------------------------*/
 //read from memory
 uint8_t read_mem(uint16_t addr){
     if(addr <= 0x800){
@@ -30,7 +27,9 @@ void write_mem(uint16_t addr, uint8_t data){
         cart_mem[addr - 0x4020] = data;
     }
 }
-
+/*--------------------------------------------------------
+Addressing functions
+--------------------------------------------------------*/
 //immediate addressing
 uint16_t imm(uint16_t PC){
     return PC + 1;
