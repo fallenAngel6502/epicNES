@@ -492,31 +492,31 @@ void cpu_cycle(uint8_t op){
             shift(abs_x(PC, X), 'L');
             PC += 7;
         break;
-		case 0x20:
+	case 0x20:
             JSR;
             PC += 6;
         break;
-		case 0x21:
+	case 0x21:
             AND(ind_x(PC, X));
             PC += 6;
         break;
-		case 0x24:
+	case 0x24:
             BIT(zero_pg(PC));
             PC += 3;
         break;
-		case 0x25:
+	case 0x25:
             AND(zero_pg(PC));
             PC += 3;
         break;
-		case 0x26:
+	case 0x26:
             rotate(zero_pg(PC), 'L');
             PC += 5;
         break;
-		case 0x28:
+	case 0x28:
             pull(&SR);
             PC += 4;
         break;
-		case 0x29:
+	case 0x29:
             AND(imm(PC));
             PC += 2;
         break;
