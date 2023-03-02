@@ -525,6 +525,10 @@ void cpu_cycle(uint8_t op){
             //rotate(&A, 'L');
             PC += 2;
         break;
+        case 0x2C:
+            BIT(absolute(PC));
+            PC += 4;
+        break;
     }
 }
 
