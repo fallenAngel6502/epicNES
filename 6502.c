@@ -41,7 +41,7 @@ void AND(uint16_t addr);
 void BIT(uint16_t addr);
 void BRK();
 //BCC, BCS, BEQ, BMI, BNE, BPL, BVC, BVS
-void branch(char cond, uint8_t offset);
+void branch(char cond);
 //CLC, CLD, CLI, CLV
 void clear_flag(char flag);
 //CMP, CPX, CPY
@@ -289,7 +289,7 @@ void BIT(uint16_t addr){
 }
 
 //branch if condition
-void branch(char cond, uint8_t offset){
+void branch(char cond){
     bool branch = false;
     switch(cond){
         case 'C':
@@ -334,7 +334,7 @@ void branch(char cond, uint8_t offset){
         break;
     }
     if(branch){
-        PC += offset;
+        JMP();
     }
 }
 
@@ -557,9 +557,7 @@ void cpu_cycle(uint8_t op){
             PC += 6;
         break;
         case 0x10:
-            if((SR & 0x80) == 0){
-                JMP();  
-            }
+            branch('I');
             PC += 3;
             //TODO +1 cyc if page boundary is crossed
         break;
@@ -593,6 +591,30 @@ void cpu_cycle(uint8_t op){
         case 0x1E:
             shift(abs_x(), 'L');
             PC += 7;
+        break;
+		case 0x20:
+            JSR;
+            PC += 6;
+        break;
+		case 0x21:
+            AND(ind_x());
+            PC += 6;
+        break;
+		case 0x24:
+            BIT(zero_pg());
+            PC += 3;
+        break;
+		case 0x25:
+            AND(zero_pg());
+            PC += 3;
+        break;
+		case 0x26:
+            rotate(zero_pg(), 'L');
+            PC += 5;
+        break;
+		case 0x28:
+            pull(&SR);
+            PC += 4;
         break;
     }
 }
