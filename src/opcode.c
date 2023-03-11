@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "memory.h"
-#include "op_code.h"
+#include "opcode.h"
 
 /*--------------------------------------------------------
 OP code functions

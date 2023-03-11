@@ -1,5 +1,5 @@
-#ifndef OP_CODES_H_
-#define OP_CODES_H_
+#ifndef OPCODES_H_
+#define OPCODES_H_
 
 void SR_flags(uint16_t val, char flags[], uint8_t* SR);
 
