@@ -28,7 +28,7 @@ void load(uint16_t addr, uint8_t* reg, uint8_t* SR);
 //ASL, LSR
 void shift(uint16_t addr, char dir, uint8_t* A, uint8_t* SR);
 void NOP();
-void ORA(uint16_t addr, uint8_t* A);
+void ORA(uint16_t addr, uint8_t* A, uint8_t* SR);
 //PHA, PHP
 void push(uint8_t val, uint8_t* SP);
 //PLA, PLP

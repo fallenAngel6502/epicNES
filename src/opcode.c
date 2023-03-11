@@ -118,8 +118,10 @@ void AND(uint16_t addr, uint8_t* A, uint8_t* SR){
 }
 
 //logical or memory value with accumulator
-void ORA(uint16_t addr, uint8_t* A){
-    *A |= read_mem(addr);
+void ORA(uint16_t addr, uint8_t* A, uint8_t* SR){
+    uint8_t val = *A | read_mem(addr);
+	*A = val;
+	SR_flags(val, "NZ", SR);
 }
 
 //logical exclusive or memory value with accumulator

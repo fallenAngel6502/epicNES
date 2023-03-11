@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "memory.h"
-#include "op_code.h"
+#include "opcode.h"
 
 //registers
 uint8_t A = 0;
@@ -35,72 +35,72 @@ void cpu_cycle(uint8_t op){
             PC += 7;
         break;
         case 0x01:
-            ORA(ind_x(PC, X));
+            ORA(ind_x(PC, X), &A, &SR);
             PC += 6;
         break;
         case 0x05:
-            ORA(zero_pg(PC));
+            ORA(zero_pg(PC), &A, &SR);
             PC += 3;
         break;
         case 0x06:
-            shift(zero_pg(PC), 'L');
+            shift(zero_pg(PC), 'L', &A, &SR);
             PC += 5;
         break;
         case 0x08:
-            set_flag('B');
-            push(SR);
+            set_flag('B', &SR);
+            push(SR, &SP);
             PC += 3;
         break;
         case 0x09:
-            ORA(imm(PC));
+            ORA(imm(PC), &A, &SR);
             PC += 2;
         break;
         case 0x0A:
-            shift(0, 'L');
+            shift(0, 'L', &A, &SR);
             PC += 2;
         break;
         case 0x0D:
-            ORA(absolute(PC));
+            ORA(absolute(PC), &A, &SR);
             PC += 4;
         break;
         case 0x0E:
-            shift(absolute(PC), 'L');
+            shift(absolute(PC), 'L', &A, &SR);
             PC += 6;
         break;
         case 0x10:
-            branch('I');
+            branch('I', &SR, &PC);
             PC += 3;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x11:
-            ORA(ind_y(PC, Y));
+            ORA(ind_y(PC, Y), &A, &SR);
             PC += 5;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x15:
-            ORA(zero_pg_x(PC, X));
+            ORA(zero_pg_x(PC, X), &A, &SR);
             PC += 4;
         break;
         case 0x16:
-            shift(zero_pg_x(PC, X), 'L');
+            shift(zero_pg_x(PC, X), 'L', &A, &SR);
             PC += 6;
         break;
         case 0x18:
-            clear_flag('C');
+            clear_flag('C', &SR);
             PC += 2;
         break;
         case 0x19:
-            ORA(abs_y(PC, Y));
+            ORA(abs_y(PC, Y), &A, &SR);
             PC += 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1D:
-            ORA(abs_x(PC, X));
+            ORA(abs_x(PC, X), &A, &SR);
             PC += 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1E:
-            shift(abs_x(PC, X), 'L');
+            shift(abs_x(PC, X), 'L', &A, &SR);
             PC += 7;
         break;
 	case 0x20:
@@ -108,27 +108,27 @@ void cpu_cycle(uint8_t op){
             PC += 6;
         break;
 	case 0x21:
-            AND(ind_x(PC, X));
+            AND(ind_x(PC, X), &A, &SR);
             PC += 6;
         break;
 	case 0x24:
-            BIT(zero_pg(PC));
+            BIT(zero_pg(PC), &A, &SR);
             PC += 3;
         break;
 	case 0x25:
-            AND(zero_pg(PC));
+            AND(zero_pg(PC), &A, &SR);
             PC += 3;
         break;
 	case 0x26:
-            rotate(zero_pg(PC), 'L');
+            rotate(zero_pg(PC), 'L', &A, &SR);
             PC += 5;
         break;
 	case 0x28:
-            pull(&SR);
+            pull(&SR, &SP);
             PC += 4;
         break;
 	case 0x29:
-            AND(imm(PC));
+            AND(imm(PC), &A, &SR);
             PC += 2;
         break;
         //TODO figure out accumlator pointer
@@ -137,7 +137,7 @@ void cpu_cycle(uint8_t op){
             PC += 2;
         break;
         case 0x2C:
-            BIT(absolute(PC));
+            BIT(absolute(PC), &A, &SR);
             PC += 4;
         break;
     }
