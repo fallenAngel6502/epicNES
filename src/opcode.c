@@ -157,41 +157,49 @@ void BIT(uint16_t addr, uint8_t* A, uint8_t* SR){
 void branch(char cond, uint8_t* SR, uint16_t* PC){
     bool branch = false;
     switch(cond){
+		//BCC
         case 'C':
             if((*SR & 0x01) == 0){
                 branch = true;
             }
         break;
+		//BCS
         case 'S':
             if((*SR & 0x01) == 0x01){
                 branch = true;
             }
         break;
+		//BEQ
         case 'Q':
             if((*SR & 0x02) == 0x02){
                 branch = true;
             }
         break;
+		//BNE
         case 'E':
             if((*SR & 0x02) == 0){
                 branch = true;
             }
         break;
+		//BMI
         case 'I':
             if((*SR & 0x80) == 0x80){
                 branch = true;
             }
         break;
+		//BPL
         case 'L':
             if((*SR & 0x80) == 0){
                 branch = true;
             }
         break;
+		//BVC
         case 'V':
             if((*SR & 0x40) == 0x40){
                 branch = true;
             }
         break;
+		//BVS
         case 'U':
             if((*SR & 0x40) == 0){
                 branch = true;
@@ -270,8 +278,7 @@ void push(uint8_t val, uint8_t* SP){
 
 //pull value from stack
 void pull(uint8_t* reg, uint8_t* SP){
-   *SP -= 1;
-   uint16_t SPaddr = (uint16_t) SP;
+   uint8_t SPaddr = (*SP-1);
    *reg = read_mem(SPaddr);
 }
 

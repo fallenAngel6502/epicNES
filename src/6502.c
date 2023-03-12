@@ -24,121 +24,163 @@ int main(){
     return 0;
 }
 
-
-
 //decodes and executes op code
 void cpu_cycle(uint8_t op){
+	int cycles = 0;
 
     switch(op){
         case 0x00:
             BRK();
-            PC += 7;
+            cycles = 7;
         break;
         case 0x01:
             ORA(ind_x(PC, X), &A, &SR);
-            PC += 6;
+            cycles = 6;
         break;
         case 0x05:
             ORA(zero_pg(PC), &A, &SR);
-            PC += 3;
+            cycles = 3;
         break;
         case 0x06:
             shift(zero_pg(PC), 'L', &A, &SR);
-            PC += 5;
+            cycles = 5;
         break;
         case 0x08:
             set_flag('B', &SR);
             push(SR, &SP);
-            PC += 3;
+            cycles = 3;
         break;
         case 0x09:
             ORA(imm(PC), &A, &SR);
-            PC += 2;
+            cycles = 2;
         break;
         case 0x0A:
             shift(0, 'L', &A, &SR);
-            PC += 2;
+            cycles = 2;
         break;
         case 0x0D:
             ORA(absolute(PC), &A, &SR);
-            PC += 4;
+            cycles = 4;
         break;
         case 0x0E:
             shift(absolute(PC), 'L', &A, &SR);
-            PC += 6;
+            cycles = 6;
         break;
         case 0x10:
-            branch('I', &SR, &PC);
-            PC += 3;
-            //TODO +1 cyc if page boundary is crossed
+            branch('L', &SR, &PC);
+            cycles= 2;
+            //TODO +1 cyc if page boundary is crossed, +1 cyc if branch is taken
         break;
         case 0x11:
             ORA(ind_y(PC, Y), &A, &SR);
-            PC += 5;
+            cycles= 5;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x15:
             ORA(zero_pg_x(PC, X), &A, &SR);
-            PC += 4;
+            cycles = 4;
         break;
         case 0x16:
             shift(zero_pg_x(PC, X), 'L', &A, &SR);
-            PC += 6;
+            cycles = 6;
         break;
         case 0x18:
             clear_flag('C', &SR);
-            PC += 2;
+            cycles = 2;
         break;
         case 0x19:
             ORA(abs_y(PC, Y), &A, &SR);
-            PC += 4;
+            cycles = 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1D:
             ORA(abs_x(PC, X), &A, &SR);
-            PC += 4;
+            cycles = 4;
             //TODO +1 cyc if page boundary is crossed
         break;
         case 0x1E:
             shift(abs_x(PC, X), 'L', &A, &SR);
-            PC += 7;
+            cycles = 7;
         break;
-	case 0x20:
+		case 0x20:
             JSR;
-            PC += 6;
+            cycles = 6;
         break;
-	case 0x21:
+		case 0x21:
             AND(ind_x(PC, X), &A, &SR);
-            PC += 6;
+            cycles = 6;
         break;
-	case 0x24:
+		case 0x24:
             BIT(zero_pg(PC), &A, &SR);
-            PC += 3;
+            cycles = 3;
         break;
-	case 0x25:
+		case 0x25:
             AND(zero_pg(PC), &A, &SR);
-            PC += 3;
+            cycles = 3;
         break;
-	case 0x26:
+		case 0x26:
             rotate(zero_pg(PC), 'L', &A, &SR);
-            PC += 5;
+            cycles = 5;
         break;
-	case 0x28:
+		case 0x28:
             pull(&SR, &SP);
-            PC += 4;
+            cycles = 4;
         break;
-	case 0x29:
+		case 0x29:
             AND(imm(PC), &A, &SR);
-            PC += 2;
+            cycles = 2;
         break;
-        //TODO figure out accumlator pointer
         case 0x2A:
-            //rotate(&A, 'L');
-            PC += 2;
+            rotate(0, 'L', &A, &SR);
+            cycles += 2;
         break;
         case 0x2C:
             BIT(absolute(PC), &A, &SR);
-            PC += 4;
+            cycles = 4;
+        break;
+		case 0x2D:
+            AND(absolute(PC), &A, &SR);
+            cycles = 4;
+        break;
+		case 0x2E:
+            AND(absolute(PC), &A, &SR);
+            cycles = 6;
+        break;
+		case 0x30:
+            branch('I', &SR, &PC);
+            cycles= 2;
+            //TODO +1 cyc if page boundary is crossed, +1 cyc if branch is taken
+        break;
+		case 0x31:
+            AND(ind_y(PC, Y), &A, &SR);
+            cycles = 5;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x35:
+            AND(zero_pg_x(PC, X), &A, &SR);
+            cycles = 4;
+        break;
+		case 0x36:
+            rotate(zero_pg_x(PC, X), 'L', &A, &SR);
+            cycles = 6;
+        break;
+		case 0x38:
+            set_flag('C', &SR);
+            cycles = 2;
+        break;
+		case 0x39:
+            AND(abs_y(PC, Y), &A, &SR);
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x3D:
+            AND(abs_x(PC, X), &A, &SR);
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x3E:
+            rotate(abs_x(PC, X), 'L', &A, &SR);
+            cycles = 7;
         break;
     }
 }
