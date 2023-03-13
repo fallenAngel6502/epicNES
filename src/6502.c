@@ -182,10 +182,46 @@ void cpu_cycle(uint8_t op){
             rotate(abs_x(PC, X), 'L', &A, &SR);
             cycles = 7;
         break;
+		case 0x40:
+			//TODO
+            //RTI();
+            cycles = 6;
+        break;
+		case 0x41:
+            EOR(ind_x(PC, X), &A, &SR);
+            cycles = 6;
+        break;
+		case 0x45:
+            EOR(zero_pg(PC), &A, &SR);
+            cycles = 3;
+        break;
+		case 0x46:
+            shift(zero_pg(PC), 'R', &A, &SR);
+            cycles = 5;
+        break;
+		case 0x48:
+            push(A, &SP);
+            cycles = 3;
+        break;
+		case 0x49:
+            EOR(imm(PC), &A, &SR);
+            cycles = 2;
+        break;
+		case 0x4A:
+            shift(0, 'R', &A, &SR);
+            cycles = 2;
+        break;
+		case 0x4C:
+            JMP(&PC);
+            cycles = 3;
+        break;
+		case 0x4D:
+            EOR(absolute(PC), &A, &SR);
+            cycles = 4;
+        break;
+		case 0x4E:
+            shift(absolute(PC), 'R', &A, &SR);
+            cycles = 6;
+        break;
     }
 }
-
-
-
-
-
