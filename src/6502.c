@@ -251,13 +251,53 @@ void cpu_cycle(uint8_t op){
 			//TODO +1 cyc if page boundary is crossed
         break;
 		case 0x5D:
-            EOR(abs_x(PC, Y), &A, &SR);
+            EOR(abs_x(PC, X), &A, &SR);
             cycles = 4;
 			//TODO +1 cyc if page boundary is crossed
         break;
 		case 0x5E:
             shift(abs_x(PC, Y), 'R', &A, &SR);
             cycles = 7;
+        break;
+		case 0x60:
+            RTS(&PC, &SP);
+            cycles = 6;
+        break;
+		case 0x61:
+            ADC(ind_x(PC, X), &A, &SR);
+            cycles = 6;
+        break;
+		case 0x65:
+            ADC(zero_pg(PC), &A, &SR);
+            cycles = 3;
+        break;
+		case 0x66:
+            rotate(zero_pg(PC), 'R', &A, &SR);
+            cycles = 5;
+        break;
+		case 0x68:
+            pull(&A, &SP);
+            cycles = 4;
+        break;
+		case 0x69:
+            ADC(imm(PC), &A, &SR);
+            cycles = 2;
+        break;
+		case 0x6A:
+            rotate(0, 'R', &A, &SR);
+            cycles = 2;
+        break;
+		case 0x6C:
+            JMP(&PC);
+            cycles = 5;
+        break;
+		case 0x6D:
+            ADC(absolute(PC), &A, &SR);
+            cycles = 4;
+        break;
+		case 0x6E:
+            rotate(absolute(PC), 'R', &A, &SR);
+            cycles = 6;
         break;
     }
 }
