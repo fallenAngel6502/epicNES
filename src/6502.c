@@ -223,5 +223,41 @@ void cpu_cycle(uint8_t op){
             shift(absolute(PC), 'R', &A, &SR);
             cycles = 6;
         break;
+		case 0x50:
+            branch('V', &SR, &PC);
+            cycles= 2;
+            //TODO +1 cyc if page boundary is crossed, +1 cyc if branch is taken
+        break;
+		case 0x51:
+            EOR(ind_y(PC, Y), &A, &SR);
+            cycles = 5;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x55:
+            EOR(zero_pg_x(PC, X), &A, &SR);
+            cycles = 4;
+        break;
+		case 0x56:
+            shift(zero_pg(PC), 'R', &A, &SR);
+            cycles = 5;
+        break;
+		case 0x58:
+            clear_flag('I', &SR);
+            cycles = 2;
+        break;
+		case 0x59:
+            EOR(abs_y(PC, Y), &A, &SR);
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x5D:
+            EOR(abs_x(PC, Y), &A, &SR);
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0x5E:
+            shift(abs_x(PC, Y), 'R', &A, &SR);
+            cycles = 7;
+        break;
     }
 }
