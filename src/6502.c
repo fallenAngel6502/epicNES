@@ -356,7 +356,7 @@ void cpu_cycle(uint8_t op){
             cycles = 2;
         break;
 		case 0x8A:
-            transfer(&A, &Y, &SR);
+            transfer(&A, &X, &SR);
             cycles = 2;
         break;
 		case 0x8C:
@@ -370,6 +370,43 @@ void cpu_cycle(uint8_t op){
 		case 0x8E:
             write_mem(absolute(PC), X);
             cycles = 4;
+        break;
+		case 0x90:
+            branch('C', &SR, &PC);
+            cycles= 2;
+            //TODO +1 cyc if page boundary is crossed, +1 cyc if branch is taken
+        break;
+		case 0x91:
+            write_mem(ind_y(PC, Y), A);
+            cycles = 6;
+        break;
+		case 0x94:
+            write_mem(zero_pg_x(PC, X), Y);
+            cycles = 4;
+        break;
+		case 0x95:
+            write_mem(zero_pg_x(PC, X), A);
+            cycles = 4;
+        break;
+		case 0x96:
+            write_mem(zero_pg_y(PC, Y), X);
+            cycles = 4;
+        break;
+		case 0x98:
+            transfer(&A, &Y, &SR);
+            cycles = 2;
+        break;
+		case 0x99:
+            write_mem(abs_y(PC, Y), A);
+            cycles = 5;
+        break;
+		case 0x9A:
+            transfer(&SP, &X, &SR);
+            cycles = 2;
+        break;
+		case 0x9D:
+            write_mem(abs_x(PC, X), A);
+            cycles = 5;
         break;
     }
 }
