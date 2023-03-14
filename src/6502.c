@@ -456,5 +456,55 @@ void cpu_cycle(uint8_t op){
             X = read_mem(absolute(PC));
             cycles = 4;
         break;
+		case 0xB0:
+            branch('S', &SR, &PC);
+            cycles= 2;
+            //TODO +1 cyc if page boundary is crossed, +1 cyc if branch is taken
+        break;
+		case 0xB1:
+            A = read_mem(ind_y(PC, Y));
+            cycles = 5;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0xB4:
+            Y = read_mem(zero_pg_x(PC, X));
+            cycles = 4;
+        break;
+		case 0xB5:
+            A = read_mem(zero_pg_x(PC, X));
+            cycles = 4;
+        break;
+		case 0xB6:
+            X = read_mem(zero_pg_y(PC, Y));
+            cycles = 4;
+        break;
+		case 0xB8:
+            clear_flag('V', &SR);
+            cycles = 2;
+        break;
+		case 0xB9:
+            A = read_mem(abs_y(PC, Y));
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0xBA:
+            transfer(&X, &SP, &SR);
+            cycles = 2;
+        break;
+		case 0xBC:
+            Y = read_mem(abs_x(PC, X));
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0xBD:
+            A = read_mem(abs_x(PC, X));
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
+		case 0xBE:
+            X = read_mem(abs_y(PC, Y));
+            cycles = 4;
+			//TODO +1 cyc if page boundary is crossed
+        break;
     }
 }
