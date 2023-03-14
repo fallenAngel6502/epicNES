@@ -408,5 +408,53 @@ void cpu_cycle(uint8_t op){
             write_mem(abs_x(PC, X), A);
             cycles = 5;
         break;
+		case 0xA0:
+            Y = read_mem(imm(PC));
+            cycles = 2;
+        break;
+		case 0xA1:
+            A = read_mem(ind_x(PC, X));
+            cycles = 6;
+        break;
+		case 0xA2:
+            X = read_mem(imm(PC));
+            cycles = 2;
+        break;
+		case 0xA4:
+            Y = read_mem(zero_pg(PC));
+            cycles = 3;
+        break;
+		case 0xA5:
+            A = read_mem(zero_pg(PC));
+            cycles = 3;
+        break;
+		case 0xA6:
+            X = read_mem(zero_pg(PC));
+            cycles = 3;
+        break;
+		case 0xA8:
+            transfer(&Y, &A, &SR);
+            cycles = 2;
+        break;
+		case 0xA9:
+            A = read_mem(imm(PC));
+            cycles = 2;
+        break;
+		case 0xAA:
+            transfer(&X, &A, &SR);
+            cycles = 2;
+        break;
+		case 0xAB:
+            Y = read_mem(absolute(PC));
+            cycles = 4;
+        break;
+		case 0xAD:
+            A = read_mem(absolute(PC));
+            cycles = 4;
+        break;
+		case 0xAE:
+            X = read_mem(absolute(PC));
+            cycles = 4;
+        break;
     }
 }
