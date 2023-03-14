@@ -538,15 +538,15 @@ void cpu_cycle(uint8_t op){
             decrement(0, &X);
             cycles = 2;
         break;
-		case 0xCD:
+		case 0xCC:
             compare(absolute(PC), &Y, &SR);
             cycles = 4;
         break;
-		case 0xCE:
+		case 0xCD:
             compare(absolute(PC), &A, &SR);
             cycles = 4;
         break;
-		case 0xCF:
+		case 0xCE:
             decrement(absolute(PC), 0);
             cycles = 6;
         break;
@@ -583,6 +583,48 @@ void cpu_cycle(uint8_t op){
             decrement(abs_x(PC, X), 0);
             cycles = 7;
         break;
-		
+		case 0xE0:
+            compare(imm(PC), &X, &SR);
+            cycles = 2;
+        break;
+		case 0xE1:
+			SBC(ind_x(PC, X), &A, &SR);
+            cycles = 6;
+        break;
+		case 0xE4:
+            compare(zero_pg(PC), &X, &SR);
+            cycles = 3;
+        break;
+		case 0xE5:
+			SBC(zero_pg(PC), &A, &SR);
+            cycles = 3;
+        break;
+		case 0xE6:
+            increment(zero_pg(PC), 0);
+            cycles = 5;
+        break;
+		case 0xE8:
+            increment(0, &X);
+            cycles = 2;
+        break;
+		case 0xE9:
+			SBC(imm(PC), &A, &SR);
+            cycles = 2;
+        break;
+		case 0xEA:
+			cycles = 2;
+		break;
+		case 0xEC:
+            compare(absolute(PC), &X, &SR);
+            cycles = 4;
+        break;
+		case 0xED:
+            SBC(absolute(PC), &A, &SR);
+            cycles = 4;
+        break;
+		case 0xEE:
+            increment(absolute(PC), 0);
+            cycles = 6;
+        break;
     }
 }
