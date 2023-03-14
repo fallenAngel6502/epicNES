@@ -221,8 +221,6 @@ void compare(uint16_t addr, uint8_t* reg, uint8_t* SR){
 void decrement(uint16_t addr, uint8_t* reg){
     if(addr == 0){
         *reg -= 1;
-    }else if(addr == 1){
-        *reg -= 1;
     }else{
         uint8_t val = read_mem(addr);
         val -= 1;
@@ -233,8 +231,6 @@ void decrement(uint16_t addr, uint8_t* reg){
 //increments value in memory or register
 void increment(uint16_t addr, uint8_t* reg){
     if(addr == 0){
-        *reg += 1;
-    }else if(addr == 1){
         *reg += 1;
     }else{
         uint8_t val = read_mem(addr);

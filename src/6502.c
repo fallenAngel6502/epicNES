@@ -335,5 +335,41 @@ void cpu_cycle(uint8_t op){
             rotate(abs_x(PC, X), 'R', &A, &SR);
             cycles = 7;
         break;
+		case 0x81:
+            write_mem(ind_x(PC, X), A);
+            cycles = 6;
+        break;
+		case 0x84:
+            write_mem(zero_pg(PC), Y);
+            cycles = 3;
+        break;
+		case 0x85:
+            write_mem(zero_pg(PC), A);
+            cycles = 3;
+        break;
+		case 0x86:
+            write_mem(zero_pg(PC), X);
+            cycles = 3;
+        break;
+		case 0x88:
+            decrement(0, &Y);
+            cycles = 2;
+        break;
+		case 0x8A:
+            transfer(&A, &Y, &SR);
+            cycles = 2;
+        break;
+		case 0x8C:
+            write_mem(absolute(PC), Y);
+            cycles = 4;
+        break;
+		case 0x8D:
+            write_mem(absolute(PC), A);
+            cycles = 4;
+        break;
+		case 0x8E:
+            write_mem(absolute(PC), X);
+            cycles = 4;
+        break;
     }
 }
