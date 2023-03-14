@@ -506,5 +506,49 @@ void cpu_cycle(uint8_t op){
             cycles = 4;
 			//TODO +1 cyc if page boundary is crossed
         break;
+		case 0xC0:
+            compare(imm(PC), &Y, &SR);
+            cycles = 2;
+        break;
+		case 0xC1:
+            compare(ind_x(PC, X), &A, &SR);
+            cycles = 6;
+        break;
+		case 0xC4:
+            compare(zero_pg(PC), &Y, &SR);
+            cycles = 3;
+        break;
+		case 0xC5:
+            compare(zero_pg(PC), &A, &SR);
+            cycles = 3;
+        break;
+		case 0xC6:
+            decrement(zero_pg(PC), 0);
+            cycles = 5;
+        break;
+		case 0xC8:
+            increment(0, &Y);
+            cycles = 2;
+        break;
+		case 0xC9:
+            compare(imm(PC), &A, &SR);
+            cycles = 2;
+        break;
+		case 0xCA:
+            decrement(0, &X);
+            cycles = 2;
+        break;
+		case 0xCD:
+            compare(absolute(PC), &Y, &SR);
+            cycles = 4;
+        break;
+		case 0xCE:
+            compare(absolute(PC), &A, &SR);
+            cycles = 4;
+        break;
+		case 0xCF:
+            decrement(absolute(PC), 0);
+            cycles = 6;
+        break;
     }
 }

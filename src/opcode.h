@@ -3,6 +3,8 @@
 
 void SR_flags(uint16_t val, char flags[], uint8_t* SR);
 
+//TODO increment and decrement set flags!!
+
 //op codes
 void ADC(uint16_t addr, uint8_t* A, uint8_t* SR);
 void AND(uint16_t addr, uint8_t* A, uint8_t* SR);
