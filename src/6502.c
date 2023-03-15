@@ -20,10 +20,6 @@ uint8_t SR = 0x20;
 //decodes and executes op code
 void cpu_cycle(uint8_t op);
 
-int main(){
-    return 0;
-}
-
 //decodes and executes op code
 void cpu_cycle(uint8_t op){
 	int cycles = 0;
