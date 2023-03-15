@@ -4,6 +4,7 @@
 #include <string.h>
 #include "memory.h"
 #include "opcode.h"
+#include "cpu6502.h"
 
 //registers
 uint8_t A = 0;

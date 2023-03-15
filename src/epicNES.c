@@ -4,7 +4,8 @@
 #include <string.h>
 #include "memory.h"
 #include "opcode.h"
-#include "6502.h"
+#include "cpu6502.h"
+#include "cartridge.h"
 
 
 int main(){
