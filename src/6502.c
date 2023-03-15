@@ -352,7 +352,7 @@ void cpu_cycle(uint8_t op){
             cycles = 3;
         break;
 		case 0x88:
-            decrement(0, &Y);
+            decrement(0, &Y, &SR);
             cycles = 2;
         break;
 		case 0x8A:
@@ -523,11 +523,11 @@ void cpu_cycle(uint8_t op){
             cycles = 3;
         break;
 		case 0xC6:
-            decrement(zero_pg(PC), 0);
+            decrement(zero_pg(PC), 0, &SR);
             cycles = 5;
         break;
 		case 0xC8:
-            increment(0, &Y);
+            increment(0, &Y, &SR);
             cycles = 2;
         break;
 		case 0xC9:
@@ -535,7 +535,7 @@ void cpu_cycle(uint8_t op){
             cycles = 2;
         break;
 		case 0xCA:
-            decrement(0, &X);
+            decrement(0, &X, &SR);
             cycles = 2;
         break;
 		case 0xCC:
@@ -547,7 +547,7 @@ void cpu_cycle(uint8_t op){
             cycles = 4;
         break;
 		case 0xCE:
-            decrement(absolute(PC), 0);
+            decrement(absolute(PC), 0, &SR);
             cycles = 6;
         break;
 		case 0xD0:
@@ -565,7 +565,7 @@ void cpu_cycle(uint8_t op){
             cycles = 4;
         break;
 		case 0xD6:
-            decrement(zero_pg_x(PC, X), 0);
+            decrement(zero_pg_x(PC, X), 0, &SR);
             cycles = 6;
         break;
 		//skip CLD
@@ -580,7 +580,7 @@ void cpu_cycle(uint8_t op){
 			//TODO +1 cyc if page boundary is crossed
         break;
 		case 0xDE:
-            decrement(abs_x(PC, X), 0);
+            decrement(abs_x(PC, X), 0, &SR);
             cycles = 7;
         break;
 		case 0xE0:
@@ -600,11 +600,11 @@ void cpu_cycle(uint8_t op){
             cycles = 3;
         break;
 		case 0xE6:
-            increment(zero_pg(PC), 0);
+            increment(zero_pg(PC), 0, &SR);
             cycles = 5;
         break;
 		case 0xE8:
-            increment(0, &X);
+            increment(0, &X, &SR);
             cycles = 2;
         break;
 		case 0xE9:
@@ -623,7 +623,7 @@ void cpu_cycle(uint8_t op){
             cycles = 4;
         break;
 		case 0xEE:
-            increment(absolute(PC), 0);
+            increment(absolute(PC), 0, &SR);
             cycles = 6;
         break;
 		case 0xF0:
@@ -641,7 +641,7 @@ void cpu_cycle(uint8_t op){
             cycles = 4;
         break;
 		case 0xF6:
-            increment(zero_pg_x(PC, X), 0);
+            increment(zero_pg_x(PC, X), 0, &SR);
             cycles = 6;
         break;
 		//skip SED
@@ -656,8 +656,10 @@ void cpu_cycle(uint8_t op){
 			//TODO +1 cyc if page boundary is crossed
         break;
 		case 0xFE:
-            increment(abs_x(PC, X), 0);
+            increment(abs_x(PC, X), 0, &SR);
             cycles = 7;
         break;
+		
+		PC += cycles;
     }
 }

@@ -218,25 +218,31 @@ void compare(uint16_t addr, uint8_t* reg, uint8_t* SR){
 }
 
 //decrements value in memory or register
-void decrement(uint16_t addr, uint8_t* reg){
+void decrement(uint16_t addr, uint8_t* reg, uint8_t* SR){
+	uint8_t val;
     if(addr == 0){
         *reg -= 1;
+		val = *reg;
     }else{
-        uint8_t val = read_mem(addr);
+        val = read_mem(addr);
         val -= 1;
         write_mem(addr, val);
     }
+	SR_flags(val, "NZC", SR);
 }
 
 //increments value in memory or register
-void increment(uint16_t addr, uint8_t* reg){
+void increment(uint16_t addr, uint8_t* reg, uint8_t* SR){
+	uint8_t val;
     if(addr == 0){
         *reg += 1;
+		val = *reg;
     }else{
-        uint8_t val = read_mem(addr);
+        val = read_mem(addr);
         val += 1;
         write_mem(addr, val);
     }
+	SR_flags(val, "NZC", SR);
 }
 
 //jump to new location

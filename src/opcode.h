@@ -17,12 +17,12 @@ void clear_flag(char flag, uint8_t* SR);
 //CMP, CPX, CPY
 void compare(uint16_t addr, uint8_t* reg, uint8_t* SR);
 //DEC, DEX, DEY
-void decrement(uint16_t addr, uint8_t* reg);
+void decrement(uint16_t addr, uint8_t* reg, uint8_t* SR);
 void EOR(uint16_t addr, uint8_t* A, uint8_t* SR);
 //returns flag value
 uint8_t get_flag(char flag, uint8_t* SR);
 //INC, INX, INY
-void increment(uint16_t addr, uint8_t* reg);
+void increment(uint16_t addr, uint8_t* reg, uint8_t* SR);
 void JMP(uint16_t* PC);
 void JSR(uint16_t* PC, uint8_t* SP);
 //LDA, LDX LDY
